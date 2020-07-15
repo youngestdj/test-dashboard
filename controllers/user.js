@@ -1,5 +1,5 @@
 import { User } from '../models';
-import { generateToken } from '../utils/helpers';
+import { generateTempToken } from '../utils/helpers';
 /**
  * @class UserController
  * @override
@@ -21,7 +21,7 @@ export default class UserController {
 
     try {
       const user = await User.create({ email, firstname, lastname });
-      const token = generateToken(user.id);
+      const token = generateTempToken(user.id);
       const { id } = user;
       return res.status(201).json({
         message: 'You have signed up successfully.',
