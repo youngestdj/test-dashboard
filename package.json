@@ -12,6 +12,9 @@
     "build": "rm -rf dist && babel ./ -d ./dist --copy-files --ignore ./node_modules",
     "postinstall": "npm run build"
   },
+  "engines": {
+    "node": "14.4.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/youngestdj/test-dashboard.git"
