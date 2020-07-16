@@ -63,13 +63,16 @@
 ##### Request headers
 
 `Authorization`: `token`
+
 ##### Request body
+
 `password`, String
 `address`, String
 `gender` String (male|female|other)
 `birthCert` file (jpg|jpeg|png)
 
 ##### Response
+
 ```
 {
   "message": "Profile updated successfully!",
@@ -77,5 +80,31 @@
     "address": "Funny str",
     "gender": "male"
   }
+}
+```
+
+#### Login
+
+##### Request body
+
+```
+{
+	"email": "lolagain@gmail.com",
+	"password": "abcdef"
+}
+```
+
+##### Response
+
+```
+{
+  "message": "Login successful!",
+  "user": {
+    "email": "lolagain@gmail.com",
+    "firstname": "Just",
+    "lastname": "doit",
+    "id": 1
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk0ODkzMjMyLCJleHAiOjE1OTQ5Nzk2MzJ9.cSxcQPfzBOzZZ9d8P3SDcMyJFbwfIor5Bu8QQkZbasE"
 }
 ```

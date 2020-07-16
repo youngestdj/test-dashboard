@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { User } from '../models';
-import { generateTempToken } from '../utils/helpers';
+import { generateTempToken, generateToken } from '../utils/helpers';
 
 /**
  * @class UserController
@@ -76,6 +76,50 @@ export default class UserController {
       });
     } catch (err) {
       return res.status(500).json({ errors: [err] });
+    }
+  }
+
+  /**
+   * @description - User login
+   * @static
+   *
+   * @param {object} req - HTTP Request
+   * @param {object} res - HTTP Response
+   *
+   * @memberof UserController
+   *
+   * @returns {object} Class instance
+   */
+  static async loginUser(req, res) {
+    try {
+      const {
+        body: { email, password },
+      } = req;
+      const user = await User.findOne({ where: { email } });
+      const passwordMatch = bcrypt.compareSync(password, user.password);
+      if (!passwordMatch) {
+        return res.status(401).json({
+          errors: ['Password is incorrect.'],
+        });
+      }
+
+      const token = generateToken(user.id);
+      const { firstname, lastname, id } = user;
+      return res.status(200).json({
+        message: 'Login successful!',
+        user: {
+          email,
+          firstname,
+          lastname,
+          id,
+        },
+        token,
+      });
+    } catch (err) {
+      return res.status(500).json({
+        sucess: false,
+        errors: [err.message],
+      });
     }
   }
 }

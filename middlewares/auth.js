@@ -53,7 +53,7 @@ class Auth {
         errors: ['Please log in.'],
       });
     }
-    console.log(req.body);
+
     jwt.verify(token, JWT_SECRET, async (err, decoded) => {
       if (err) {
         return res.status(401).json({
@@ -72,6 +72,30 @@ class Auth {
       req.user = decoded;
       return next();
     });
+  }
+
+  /**
+   * @description Middleware function to verify if user has taken and passed test
+   * @param {object} req http request object
+   * @param {object} res http response object
+   * @param {Function} next next middleware function
+   * @returns {undefined}
+   */
+  static async checkValidUser(req, res, next) {
+    try {
+      const {
+        body: { email },
+      } = req;
+      const user = await User.findOne({ where: { email, testSuccess: true } });
+      if (!user) {
+        return res
+          .status(404)
+          .json({ errors: ['User does not exist or has not taken the test'] });
+      }
+      return next();
+    } catch (err) {
+      return res.status(404).json({ errors: [err] });
+    }
   }
 }
 

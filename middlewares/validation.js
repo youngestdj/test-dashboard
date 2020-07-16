@@ -1,5 +1,4 @@
 import { check, validationResult } from 'express-validator';
-import { User } from '../models';
 
 export const returnValidationErrors = (req, res, next) => {
   const errors = validationResult(req)
@@ -43,24 +42,13 @@ export const validateEditProfile = [
     .withMessage('Gender should either be male, female, or other'),
 ];
 
-export const validateUser = async (req, res, next) => {
-  const {
-    body: { userId },
-  } = req;
-  try {
-    const user = await User.findOne({
-      where: { id: userId },
-    });
-
-    if (!user) {
-      return res.status(404).json({
-        errors: ['User does not exist.'],
-      });
-    }
-    return next();
-  } catch (err) {
-    return res.status(500).json({
-      errors: ['Something went wrong'],
-    });
-  }
-};
+export const validateLogin = [
+  check('email')
+    .isEmail()
+    .withMessage('Please provide a valid email.')
+    .custom((value) => !/\s/.test(value))
+    .withMessage('No spaces are allowed in the email.'),
+  check('password')
+    .isLength({ min: 4 })
+    .withMessage('Please provide a valid password.'),
+];

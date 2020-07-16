@@ -4,6 +4,7 @@ import TestController from './controllers/test';
 import {
   validateSignup,
   validateEditProfile,
+  validateLogin,
   returnValidationErrors,
 } from './middlewares/validation';
 import Auth from './middlewares/auth';
@@ -28,6 +29,15 @@ router
     validateEditProfile,
     returnValidationErrors,
     UserController.editProfile
+  );
+
+router
+  .route('/user/login')
+  .post(
+    validateLogin,
+    returnValidationErrors,
+    Auth.checkValidUser,
+    UserController.loginUser
   );
 
 export default router;
