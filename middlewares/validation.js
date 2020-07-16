@@ -27,6 +27,22 @@ export const validateSignup = [
     .withMessage('Lastname must be alphanumeric characters.'),
 ];
 
+export const validateEditProfile = [
+  check('password')
+    .isLength({ min: 4 })
+    .withMessage('Password must be more than 4 characters.'),
+  check('address')
+    .isLength({ min: 4 })
+    .withMessage('Address must be more than 4 characters.')
+    .isString()
+    .withMessage('Address must be alphanumeric characters.'),
+  check('gender')
+    .isLength({ min: 4 })
+    .withMessage('Gender must be at least 4 characters long.')
+    .custom((value) => ['male', 'female', 'other'].indexOf(value) !== -1)
+    .withMessage('Gender should either be male, female, or other'),
+];
+
 export const validateUser = async (req, res, next) => {
   const {
     body: { userId },

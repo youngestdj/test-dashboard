@@ -27,6 +27,9 @@ module.exports = {
         dob: {
           type: Sequelize.STRING,
         },
+        password: {
+          type: Sequelize.STRING,
+        },
         address: {
           type: Sequelize.STRING,
         },

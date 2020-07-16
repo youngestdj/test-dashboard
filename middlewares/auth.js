@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { User } from '../models';
 
 const { JWT_SECRET, TEMP_JWT_SECRET } = process.env;
 
@@ -13,7 +14,7 @@ class Auth {
    * @param {Function} next next middleware function
    * @returns {undefined}
    */
-  static verifyTempUser(req, res, next) {
+  static async verifyTempUser(req, res, next) {
     const token = req.headers['x-access-token'] || req.headers.authorization;
     if (!token) {
       return res.status(401).json({
@@ -22,12 +23,17 @@ class Auth {
         ],
       });
     }
-    jwt.verify(token, TEMP_JWT_SECRET, (err, decoded) => {
+    jwt.verify(token, TEMP_JWT_SECRET, async (err, decoded) => {
       if (err) {
         return res.status(401).json({
           errors: ['You have been logged out, please login again to continue'],
         });
       }
+      const user = await User.findOne({ where: { id: decoded.id } });
+      if (!user)
+        return res.status(404).json({
+          errors: ['User not found. Please create a new account.'],
+        });
       req.user = decoded;
       return next();
     });
@@ -40,19 +46,29 @@ class Auth {
    * @param {Function} next next middleware function
    * @returns {undefined}
    */
-  static verifyUser(req, res, next) {
+  static async verifyUser(req, res, next) {
     const token = req.headers['x-access-token'] || req.headers.authorization;
     if (!token) {
       return res.status(401).json({
         errors: ['Please log in.'],
       });
     }
-    jwt.verify(token, JWT_SECRET, (err, decoded) => {
+    console.log(req.body);
+    jwt.verify(token, JWT_SECRET, async (err, decoded) => {
       if (err) {
         return res.status(401).json({
           errors: ['You have been logged out, please login again to continue'],
         });
       }
+      const user = await User.findOne({
+        where: { id: decoded.id, testSuccess: true },
+      });
+      if (!user)
+        return res.status(404).json({
+          errors: [
+            'User not found. Please create a new account or take the test if you have already created an account.',
+          ],
+        });
       req.user = decoded;
       return next();
     });

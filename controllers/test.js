@@ -23,7 +23,7 @@ export default class TestController {
 
     try {
       if (answer === 'correct') {
-        const token = generateToken();
+        const token = generateToken(id);
         await User.update({ testSuccess: true }, { where: { id } });
         return res.status(201).json({
           message: 'All tests passed.',
