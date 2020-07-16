@@ -66,10 +66,10 @@
 
 ##### Request body
 
-`password`, String
-`address`, String
-`gender` String (male|female|other)
-`birthCert` file (jpg|jpeg|png)
+`password`, String  
+`address`, String  
+`gender` String (male|female|other)  
+`birthCert` file (jpg|jpeg|png)  
 
 ##### Response
 
